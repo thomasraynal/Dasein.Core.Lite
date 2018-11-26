@@ -4,8 +4,8 @@ using System.Text;
 
 namespace AspNetCoreStarterPack.SignalR
 {
-    public interface IHubRequest<TDto> : IHubRequestFilter
+    public static class HubConstants
     {
-       Func<TDto,bool> Filter { get; }
+        public static string HubQueryFilter = "filter";
     }
 }

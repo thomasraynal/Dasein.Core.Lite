@@ -27,15 +27,15 @@ namespace AspNetCoreStarter.Tests.Module
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ITrade>>> GetAllTrades()
+        public async Task<IEnumerable<ITrade>> GetAllTrades()
         {
-            return Ok(await _tradeService.GetAllTrades());
+            return await _tradeService.GetAllTrades();
         }
 
         [HttpGet("{tradeId}")]
-        public async Task<IActionResult> GetTradeById([FromQuery] Guid tradeId)
+        public async Task<ITrade> GetTradeById([FromQuery] Guid tradeId)
         {
-            return Ok(await _tradeService.GetTradeById(tradeId));
+            return await _tradeService.GetTradeById(tradeId);
         }
     }
 }

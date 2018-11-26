@@ -25,7 +25,8 @@ namespace AspNetCoreStarterPack
             services.AddSingleton<IServiceConfiguration>(ServiceConfiguration);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddApiVersioning(options => {
+            services.AddApiVersioning(options =>
+            {
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = new ApiVersion(ServiceConfiguration.Version, 0);
@@ -33,7 +34,7 @@ namespace AspNetCoreStarterPack
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc($"v{ServiceConfiguration.Version}", new Info { Title = $"API v.{ServiceConfiguration.Version}", Version = $"v{ServiceConfiguration.Version}" });
+                options.SwaggerDoc($"{ServiceConfiguration.Name} v{ServiceConfiguration.Version}", new Info { Title = ServiceConfiguration.Name, Version = ServiceConfiguration.Version.ToString() });
             });
 
             ConfigureServicesInternal(services);
@@ -81,7 +82,7 @@ namespace AspNetCoreStarterPack
 
             AppCore.Instance.ObjectProvider.Configure((config) => config.For<ILogger>().Use(globalLogger));
 
-            this.LogInformation($"Start service [{ServiceConfiguration.Name}] on [{Configuration["urls"]}]");
+            this.LogInformation($"Start service [{ServiceConfiguration.Name}]");
 
             OnApplicationStart();
 

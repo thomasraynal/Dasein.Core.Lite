@@ -16,7 +16,7 @@ namespace AspNetCoreStarter.Tests.Infrastructure
         
             if (null == claim)
             {
-                throw new UnauthorizedUserException();
+                throw new UnauthorizedUserException($"User must have role [{requirement.Value}]");
             }
 
             context.Succeed(requirement);

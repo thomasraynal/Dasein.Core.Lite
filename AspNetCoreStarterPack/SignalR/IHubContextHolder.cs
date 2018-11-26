@@ -4,9 +4,11 @@ using System.Text;
 
 namespace AspNetCoreStarterPack.SignalR
 {
-    public interface IHubContextHolder
+    public interface IHubContextHolder<TDto>
     {
-        void RegisterUserId(string hub, string userId);
+        Func<TDto, bool> AcceptAll { get; }
+        IDictionary<string, Func<TDto, bool>> Groups { get; }
+        void RegisterUserId(string hub, string userId, Func<TDto, bool> query);
         void UnRegisterUserId(string hub, string userId);
     }
 }

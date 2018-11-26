@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreStarterPack", "AspNetCoreStarterPack\AspNetCoreStarterPack.csproj", "{EC4ADF62-1581-453E-B968-8436E40BABF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreStarterPack", "AspNetCoreStarterPack\AspNetCoreStarterPack.csproj", "{EC4ADF62-1581-453E-B968-8436E40BABF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreStarterPack.Default", "AspNetCoreStarterPack.Default\AspNetCoreStarterPack.Default.csproj", "{89E7CA0B-56D6-4AB6-9AF7-D8FEE5EFBF1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreStarterPack.Default", "AspNetCoreStarterPack.Default\AspNetCoreStarterPack.Default.csproj", "{89E7CA0B-56D6-4AB6-9AF7-D8FEE5EFBF1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreStarter.Tests", "AspNetCoreStarter.Tests\AspNetCoreStarter.Tests.csproj", "{AE8F477C-9D5A-4BBF-871C-51F23085B961}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreStarter.Demo.Common", "AspNetCoreStarter.Tests\AspNetCoreStarter.Demo.Common.csproj", "{AE8F477C-9D5A-4BBF-871C-51F23085B961}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{3B5E79EE-C6DC-4BD7-B11E-D4AB7C655AAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreStarter.Demo.Host", "AspNetCoreStarter.Demo.Host\AspNetCoreStarter.Demo.Host.csproj", "{72C764DA-0F9C-49BA-90FE-B1081912E1C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{AE8F477C-9D5A-4BBF-871C-51F23085B961}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE8F477C-9D5A-4BBF-871C-51F23085B961}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE8F477C-9D5A-4BBF-871C-51F23085B961}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B5E79EE-C6DC-4BD7-B11E-D4AB7C655AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5E79EE-C6DC-4BD7-B11E-D4AB7C655AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B5E79EE-C6DC-4BD7-B11E-D4AB7C655AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B5E79EE-C6DC-4BD7-B11E-D4AB7C655AAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72C764DA-0F9C-49BA-90FE-B1081912E1C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72C764DA-0F9C-49BA-90FE-B1081912E1C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72C764DA-0F9C-49BA-90FE-B1081912E1C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72C764DA-0F9C-49BA-90FE-B1081912E1C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿using AspNetCoreStarter.Authentication;
 using AspNetCoreStarter.Tests.Domain;
+using AspNetCoreStarter.Tests.Infrastructure;
 using AspNetCoreStarterPack;
 using AspNetCoreStarterPack.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,9 @@ namespace AspNetCoreStarter.Tests.Module
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody] CredentialsDto credentials)
+        public async Task<TradeServiceToken> Login([FromBody] CredentialsDto credentials)
         {
-            return Ok(_userService.Login(credentials));
+            return await _userService.Login(credentials);
         }
 
     }

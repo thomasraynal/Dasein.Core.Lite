@@ -23,6 +23,8 @@ namespace AspNetCoreStarter.Tests.Domain
         public const string EquityTraderUserPolicy = "EquityTraderUserPolicy";
         public const string TraderClaimValue = "Trader";
         public const string EquityTraderClaimValue = "EQ-Trader";
+        public const string OnPriceChanged = "OnPriceChanged";
+        public const string RaisePriceChanged = "RaisePriceChanged";
 
         private static readonly Random _rand = new Random();
         private static IEnumerable<string> _counterparties = new[]
@@ -72,6 +74,8 @@ namespace AspNetCoreStarter.Tests.Domain
                 return _assets;
             }
         }
+
+   
 
         private static readonly IEnumerable<Asset> _assets =
 

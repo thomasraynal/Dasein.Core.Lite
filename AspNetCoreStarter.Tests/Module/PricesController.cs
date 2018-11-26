@@ -21,11 +21,11 @@ namespace AspNetCoreStarter.Tests.Module
 
         [Authorize(TradeReferential.EquityTraderUserPolicy)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IPrice>>> GetPrices()
+        public async Task<IEnumerable<IPrice>> GetPrices(bool cache = true)
         {
-            return Ok(await _priceService.GetPrices());
+            if (cache) return await _priceService.GetPrices();
+
+            return await _priceService.GetPricesNoCache();
         }
-
-
     }
 }

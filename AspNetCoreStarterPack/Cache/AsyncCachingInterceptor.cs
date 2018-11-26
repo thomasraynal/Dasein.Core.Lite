@@ -12,7 +12,7 @@ namespace AspNetCoreStarterPack.Cache
     {
         public async Task<IMethodInvocationResult> InterceptAsync(IAsyncMethodInvocation methodInvocation)
         {
-            var cache = methodInvocation.MethodInfo.GetCustomAttributes(typeof(Cached), false).First();
+            var cache = methodInvocation.MethodInfo.GetCustomAttributes(typeof(Cached), false).FirstOrDefault();
 
             if (cache != null)
             {
