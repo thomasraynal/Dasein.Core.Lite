@@ -10,6 +10,7 @@ namespace AspNetCoreStarter.Tests.Domain
     {
         public PriceValidator()
         {
+            RuleFor(request => request.Id).NotEmpty().NotEqual(Guid.Empty).WithMessage("Id should be set");
             RuleFor(request => request.Asset).NotEmpty().WithMessage("Asset should be set");
             RuleFor(request => request.Value).NotEmpty().WithMessage("Value should be set");
         }
@@ -17,6 +18,8 @@ namespace AspNetCoreStarter.Tests.Domain
 
     public interface IPrice : ICachedRessource
     {
+        Guid Id { get; }
+        DateTime Date { get; }
         String Asset { get; }
         double Value { get; }
     }

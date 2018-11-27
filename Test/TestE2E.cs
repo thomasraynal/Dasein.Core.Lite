@@ -58,9 +58,9 @@ namespace Test
                  Assert.AreEqual(60, p.Value);
              });
 
-            await connection.InvokeAsync(TradeReferential.RaisePriceChanged, new Price("stock1", 20));
-            await connection.InvokeAsync(TradeReferential.RaisePriceChanged, new Price("stock2", 30));
-            await connection.InvokeAsync(TradeReferential.RaisePriceChanged, new Price("stock3", 60));
+            await connection.InvokeAsync(TradeReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock1", 20, DateTime.Now));
+            await connection.InvokeAsync(TradeReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock2", 30, DateTime.Now));
+            await connection.InvokeAsync(TradeReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock3", 60, DateTime.Now));
 
             await Task.Delay(500);
 

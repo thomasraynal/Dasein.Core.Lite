@@ -27,6 +27,7 @@ namespace AspNetCoreStarter.Tests.Domain
         public const string RaisePriceChanged = "RaisePriceChanged";
 
         private static readonly Random _rand = new Random();
+
         private static IEnumerable<string> _counterparties = new[]
         {
           "Amundi Asset Management",

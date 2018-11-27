@@ -1,11 +1,15 @@
-﻿using AspNetCoreStarter.Tests.Domain;
+﻿using AspNetCoreStarter.Demo.Common.Domain;
+using AspNetCoreStarter.Tests.Domain;
 using AspNetCoreStarter.Tests.Infrastructure;
 using AspNetCoreStarter.Tests.Module;
 using AspNetCoreStarterPack;
 using AspNetCoreStarterPack.Cache;
 using AspNetCoreStarterPack.Default;
 using AspNetCoreStarterPack.Extensions;
+using AspNetCoreStarterPack.GraphQL;
+using AspNetCoreStarterPack.Infrastructure;
 using AspNetCoreStarterPack.SignalR;
+using GraphQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -17,6 +21,7 @@ using StructureMap;
 using System;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AspNetCoreStarter.Tests
 {
@@ -28,6 +33,8 @@ namespace AspNetCoreStarter.Tests
             {
                 scanner.AssembliesAndExecutablesFromApplicationBaseDirectory();
                 scanner.WithDefaultConventions();
+                scanner.AddAllTypesOf<IPublisher>();
+                this.RegisterCacheProxy<ITradeService, TradeService>();
                 this.RegisterCacheProxy<IPriceService, PriceService>();
 
             });
@@ -46,6 +53,7 @@ namespace AspNetCoreStarter.Tests
             services.AddSingleton<IHubContextHolder<Price>,HubContextHolder<Price>>();
             services.AddSingleton<ICacheStrategy<MethodCacheObject>, DefaultCacheStrategy<MethodCacheObject>>();
             services.AddTransient<IAuthorizationHandler, ClaimRequirementHandler>();
+            services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -57,8 +65,17 @@ namespace AspNetCoreStarter.Tests
                             IssuerSigningKey = secret,
                             ValidIssuer = ServiceConfiguration.Name,
                             ValidateIssuer = true,
-                            ValidateAudience = false,
-                            ValidateActor = false
+                            ValidateLifetime = true,
+                            ValidateActor = false,
+                            ValidateAudience = false
+                        };
+
+                        options.Events = new JwtBearerEvents()
+                        {
+                            OnAuthenticationFailed = context =>
+                            {
+                                throw new UnauthorizedUserException($"Failed to authenticate user [{context.Exception.Message}]");
+                            }
                         };
                     });
 
@@ -68,25 +85,44 @@ namespace AspNetCoreStarter.Tests
                 options.AddPolicy(TradeReferential.EquityTraderUserPolicy, policy => policy.Requirements.Add(new ClaimRequirement(ClaimTypes.Role, TradeReferential.EquityTraderClaimValue)));
             });
 
-            services.AddSignalR(hubOptions =>
-            {
-                hubOptions.EnableDetailedErrors = true;
-                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
-            })
+            var jsonSettings = new ServiceJsonSerializerSettings();
+
+            services
+                    .AddSignalR(hubOptions =>
+                    {
+                        hubOptions.EnableDetailedErrors = true;
+                        hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
+                    })
                     .AddJsonProtocol(options =>
                     {
-                        options.PayloadSerializerSettings = new ServiceJsonSerializerSettings();
+                        options.PayloadSerializerSettings = jsonSettings;
                     });
 
             services.AddMvc()
-                    .AddJsonSettings(new ServiceJsonSerializerSettings());
+                    .RegisterJsonSettings(jsonSettings);
 
+        }
+
+        protected override void OnApplicationStart()
+        {
+            Task.Delay(500).ContinueWith(async (_) =>
+            {
+                var publishers = AppCore.Instance.GetAll<IPublisher>();
+
+                foreach(var publisher in publishers)
+                {
+                    await publisher.Start();
+                }
+                
+            });
         }
 
         protected override void ConfigureInternal(IApplicationBuilder app)
         {
             app.UseAuthentication();
 
+            app.UseMiddleware<GraphQLMiddleware<TradeServiceQuery,ITrade>>();
+            
             app.UseSignalR(routes =>
             {
                 routes.MapHub<PriceHub>("");

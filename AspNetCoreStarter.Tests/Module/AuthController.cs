@@ -1,12 +1,8 @@
-﻿using AspNetCoreStarter.Authentication;
-using AspNetCoreStarter.Tests.Domain;
+﻿using AspNetCoreStarter.Tests.Domain;
 using AspNetCoreStarter.Tests.Infrastructure;
 using AspNetCoreStarterPack;
 using AspNetCoreStarterPack.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AspNetCoreStarter.Tests.Module

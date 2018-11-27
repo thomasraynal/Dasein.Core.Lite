@@ -1,31 +1,18 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace AspNetCoreStarter.Tests.Infrastructure
 {
-    public class DateTimeJsonConverter : JsonConverter
+    public class DateTimeJsonConverter : IsoDateTimeConverter
     {
-        public override bool CanConvert(Type objectType)
+        public DateTimeJsonConverter()
         {
-            return objectType == typeof(DateTime);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.Value is String)
-            {
-                return String.IsNullOrEmpty((String)reader.Value) ? DateTime.MinValue : DateTime.Parse((String)reader.Value);
-            }
-
-            return reader.Value == null ? DateTime.MinValue : (DateTime)reader.Value;
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            var date = (DateTime)value;
-            writer.WriteValue(date.ToString("yyyy-MM-ddTHH:mm"));
+            base.DateTimeFormat = "yyyy-MM-ddTHH:mm";
         }
     }
+
+   
 }

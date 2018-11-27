@@ -8,7 +8,6 @@ namespace AspNetCoreStarterPack.SignalR
     {
         public HubRequestKey(HubRequestFilter filter)
         {
-
         }
 
         public string Key { get; private set; }

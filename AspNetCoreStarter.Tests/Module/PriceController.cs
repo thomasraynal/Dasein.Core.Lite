@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace AspNetCoreStarter.Tests.Module
 {
-    public class PricesController : ServiceControllerBase
+    public class PriceController : ServiceControllerBase
     {
         private IPriceService _priceService;
 
-        public PricesController(IPriceService priceService, JsonSerializerSettings settings)
+        public PriceController(IPriceService priceService, JsonSerializerSettings settings)
         {
             _priceService = priceService;
         }
@@ -23,7 +23,7 @@ namespace AspNetCoreStarter.Tests.Module
         [HttpGet]
         public async Task<IEnumerable<IPrice>> GetPrices(bool cache = true)
         {
-            if (cache) return await _priceService.GetPrices();
+            if (cache) return await _priceService.GetAllPrices();
 
             return await _priceService.GetPricesNoCache();
         }

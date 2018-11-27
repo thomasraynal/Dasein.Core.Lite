@@ -7,7 +7,7 @@ namespace AspNetCoreStarterPack.SignalR
 {
     public abstract class HubRequestBase<TDto> : HubRequestFilter, IHubRequest<TDto>
     {
-        private Func<TDto, bool> _filter;
+        private readonly Func<TDto, bool> _filter;
 
         public HubRequestBase(Expression<Func<TDto, bool>> filter): base(filter)
         {

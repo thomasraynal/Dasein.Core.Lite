@@ -7,14 +7,22 @@ namespace AspNetCoreStarter.Tests.Domain
 
     public class Price : IPrice
     {
+        private readonly Guid _id;
+        private readonly DateTime _date;
         private readonly string _asset;
         private readonly double _value;
 
-        public Price(string asset, double value)
+        public Price(Guid id, string asset, double value, DateTime date)
         {
+            _id = id;
+            _date = date;
             _asset = asset;
             _value = value;
         }
+
+        public Guid Id => _id;
+
+        public DateTime Date => _date;
 
         public string Asset => _asset;
 

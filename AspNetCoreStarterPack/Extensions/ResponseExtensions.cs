@@ -20,7 +20,13 @@ namespace AspNetCoreStarterPack.Extensions
             response.WriteAsync(JsonConvert.SerializeObject(model, settings)).Wait();
             return response;
         }
-        
+
+        public static HttpResponse AsJson(this HttpResponse response)
+        {
+            response.ContentType = ContentTypeJson;
+            return response;
+        }
+
         public static HttpResponse WithStatusCode(this HttpResponse response, HttpStatusCode httpStatusCode)
         {
             response.StatusCode = (int)httpStatusCode;

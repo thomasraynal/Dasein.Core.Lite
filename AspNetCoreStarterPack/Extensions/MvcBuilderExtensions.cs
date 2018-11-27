@@ -8,7 +8,7 @@ namespace AspNetCoreStarterPack.Extensions
 {
     public static class MvcBuilderExtensions
     {
-        public static IMvcBuilder AddJsonSettings(this IMvcBuilder builder, JsonSerializerSettings settings)
+        public static IMvcBuilder RegisterJsonSettings(this IMvcBuilder builder, JsonSerializerSettings settings)
         {
             builder.Services.AddSingleton(settings);
             builder.Services.AddSingleton(JsonSerializer.Create(settings));

@@ -65,7 +65,7 @@ namespace AspNetCoreStarter.Tests.Domain
 
         public TradeWay Way => _way;
 
-        public double Price => _price;
+        public double PriceOnTransaction => _price;
 
         public double Volume => _volume;
 

@@ -15,7 +15,7 @@ namespace AspNetCoreStarter.Tests.Domain
             RuleFor(request => request.Asset).NotEmpty().WithMessage("Asset should be set");
             RuleFor(request => request.Status).NotEmpty().WithMessage("Status should be set");
             RuleFor(request => request.Way).NotEmpty().WithMessage("Way should be set");
-            RuleFor(request => request.Price).NotEmpty().WithMessage("Price should be set");
+            RuleFor(request => request.PriceOnTransaction).NotEmpty().WithMessage("PriceOnTransaction should be set");
             RuleFor(request => request.Volume).NotEmpty().WithMessage("Volume should be set");
         }
     }
@@ -28,7 +28,7 @@ namespace AspNetCoreStarter.Tests.Domain
         String Asset { get; }
         TradeStatus Status { get; set; }
         TradeWay Way { get; }
-        double Price { get; }
+        double PriceOnTransaction { get; }
         double Volume { get; }
     }
 }
