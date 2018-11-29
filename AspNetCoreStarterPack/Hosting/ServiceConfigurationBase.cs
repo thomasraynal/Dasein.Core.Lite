@@ -11,7 +11,5 @@ namespace AspNetCoreStarterPack
         public IConfiguration Root { get; internal set; }
         public abstract string Name { get; set; }
         public abstract int Version { get; set; }
-
-        
     }
 }

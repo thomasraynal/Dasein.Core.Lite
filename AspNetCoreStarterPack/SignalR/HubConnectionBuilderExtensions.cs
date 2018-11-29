@@ -7,7 +7,7 @@ namespace AspNetCoreStarterPack.SignalR
 {
     public static class HubConnectionBuilderExtensions
     {
-        public static IHubConnectionBuilder WithQuery(this IHubConnectionBuilder builder, string root, HubRequestFilter filter)
+        public static IHubConnectionBuilder WithQuery(this IHubConnectionBuilder builder, string root, IHubRequestFilter filter)
         {
             return builder.WithUrl($"{root}?{HubConstants.HubQueryFilter}={filter.GroupId}");
         }

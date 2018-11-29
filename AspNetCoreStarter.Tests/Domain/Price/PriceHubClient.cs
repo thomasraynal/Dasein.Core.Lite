@@ -1,7 +1,12 @@
 ﻿using AspNetCoreStarter.Tests.Module;
 using AspNetCoreStarterPack;
+using AspNetCoreStarterPack.Default;
+using AspNetCoreStarterPack.Infrastructure;
 using AspNetCoreStarterPack.SignalR;
+using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,30 +14,26 @@ using System.Threading.Tasks;
 
 namespace AspNetCoreStarter.Tests.Domain
 {
-    //public class PriceHubClient<TDto, TRequest> : IDisposable 
-    //    where TRequest: IHubRequest<TDto>
-    //{
-    //    private HubConnection _connection;
-    //    private IHubProxy _hubProxy;
-    //    private IDisposable _feed;
-    //    private IServiceConfiguration _configuration;
+    public class PriceHubClient : StreamingServiceClientBase<Price, PriceRequest>
+    {
+        private Func<HubConnectionBuilder> _builder;
 
-    //    public async Task Start(TRequest request)
-    //    {
-    //        _connection = new HubConnection($"{request.GroupId}?{HubConstants.HubQueryFilter}={_configuration.Root["urls"]}");
-    //        _hubProxy = _connection.CreateHubProxy(nameof(PriceHub));
-    //        _feed = _hubProxy.On<IPrice>(TradeReferential.PriceUpdate, stock => Console.WriteLine("Stock update for {0} new price {1}", stock.Asset, stock.Value));
-    //        await _connection.Start();
-    //    }
+        public PriceHubClient(PriceRequest request) : base(request)
+        {
+            _builder = () =>
+            {
+                return new HubConnectionBuilder().AddJsonProtocol(options =>
+                                {
+                                    options.PayloadSerializerSettings = AppCore.Instance.Get<JsonSerializerSettings>();
+                                });
+            };
 
-    //    public void Dispose()
-    //    {
-    //        _feed.Dispose();
-    //    }
+        }
 
-    //    public PriceHubClient(IServiceConfiguration configuration)
-    //    {
-    //        _configuration = configuration;
-    //    }
-    //}
+        public override string HubName => nameof(PriceHub);
+
+        public override string OnStreamUpdateMethodName => TradeReferential.OnPriceChanged;
+
+        public override Func<HubConnectionBuilder> ConnectionBuilderProvider => _builder;
+    }
 }

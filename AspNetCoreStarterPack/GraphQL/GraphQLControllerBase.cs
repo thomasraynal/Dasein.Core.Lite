@@ -36,11 +36,11 @@ namespace AspNetCoreStarterPack.GraphQL
                 Inputs = inputs
             };
 
-            var result = await _documentExecuter.ExecuteAsync(executionOptions).ConfigureAwait(false);
+            var result = await _documentExecuter.ExecuteAsync(executionOptions);
 
             if (result.Errors?.Count > 0)
             {
-                return BadRequest(result);
+                throw new InvalidGraphQLRequest(result.Errors);
             }
 
             return Ok(result);

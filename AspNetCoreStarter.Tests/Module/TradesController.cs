@@ -26,6 +26,7 @@ namespace AspNetCoreStarter.Tests.Module
             return CreatedAtAction(nameof(GetTradeById), new { tradeId = tradeResult.TradeId }, tradeResult);
         }
 
+        [ResponseCache(Duration = 30)]
         [HttpGet]
         public async Task<IEnumerable<ITrade>> GetAllTrades()
         {

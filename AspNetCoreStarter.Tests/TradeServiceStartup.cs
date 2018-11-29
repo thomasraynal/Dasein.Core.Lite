@@ -9,6 +9,7 @@ using AspNetCoreStarterPack.Extensions;
 using AspNetCoreStarterPack.GraphQL;
 using AspNetCoreStarterPack.Infrastructure;
 using AspNetCoreStarterPack.SignalR;
+using FluentValidation.AspNetCore;
 using GraphQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StructureMap;
 using System;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +36,7 @@ namespace AspNetCoreStarter.Tests
                 scanner.AssembliesAndExecutablesFromApplicationBaseDirectory();
                 scanner.WithDefaultConventions();
                 scanner.AddAllTypesOf<IPublisher>();
+                scanner.ConnectImplementationsToTypesClosing(typeof(ISignalRService<,>));
                 this.RegisterCacheProxy<ITradeService, TradeService>();
                 this.RegisterCacheProxy<IPriceService, PriceService>();
 
@@ -50,6 +53,7 @@ namespace AspNetCoreStarter.Tests
         protected override void ConfigureServicesInternal(IServiceCollection services)
         {
             services.AddSerilog(Configuration);
+            services.AddSingleton<IHubConfiguration>(ServiceConfiguration);
             services.AddSingleton<IHubContextHolder<Price>,HubContextHolder<Price>>();
             services.AddSingleton<ICacheStrategy<MethodCacheObject>, DefaultCacheStrategy<MethodCacheObject>>();
             services.AddTransient<IAuthorizationHandler, ClaimRequirementHandler>();
@@ -67,7 +71,7 @@ namespace AspNetCoreStarter.Tests
                             ValidateIssuer = true,
                             ValidateLifetime = true,
                             ValidateActor = false,
-                            ValidateAudience = false
+                            ValidateAudience = false,
                         };
 
                         options.Events = new JwtBearerEvents()
@@ -99,30 +103,15 @@ namespace AspNetCoreStarter.Tests
                     });
 
             services.AddMvc()
-                    .RegisterJsonSettings(jsonSettings);
+                    .RegisterJsonSettings(jsonSettings)
+                    .AddFluentValidation(validation => validation.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 
-        }
-
-        protected override void OnApplicationStart()
-        {
-            Task.Delay(500).ContinueWith(async (_) =>
-            {
-                var publishers = AppCore.Instance.GetAll<IPublisher>();
-
-                foreach(var publisher in publishers)
-                {
-                    await publisher.Start();
-                }
-                
-            });
         }
 
         protected override void ConfigureInternal(IApplicationBuilder app)
         {
             app.UseAuthentication();
-
-            app.UseMiddleware<GraphQLMiddleware<TradeServiceQuery,ITrade>>();
-            
+ 
             app.UseSignalR(routes =>
             {
                 routes.MapHub<PriceHub>("");

@@ -7,12 +7,14 @@ using AspNetCoreStarter.Tests;
 using AspNetCoreStarter.Tests.Domain;
 using AspNetCoreStarter.Tests.Module;
 using AspNetCoreStarterPack;
+using AspNetCoreStarterPack.Default;
 using AspNetCoreStarterPack.Infrastructure;
 using AspNetCoreStarterPack.SignalR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using NUnit.Framework;
 using System;
+using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 
 namespace Test
@@ -64,7 +66,41 @@ namespace Test
 
             await Task.Delay(500);
 
+            await connection.DisposeAsync();
         }
 
+        [Test]
+        public async Task TestSignalRClientResilientConnection()
+        {
+            var query = new PriceRequest((p) => p.Value > 50);
+
+            var service = SignalRServiceBuilder<Price, PriceRequest>
+                            .Create()
+                            .Build(query);
+
+            var disposable = service.Connect(Scheduler.Default, 0)
+                    .Subscribe(p =>
+                    {
+                        Assert.AreEqual("stock3", p.Asset);
+                        Assert.AreEqual(60, p.Value);
+                    });
+
+            await Task.Delay(100);
+
+            while (service.Current.CurrentState != ConnectionStatus.Connected)
+            {
+                await Task.Delay(500);
+            }
+
+            await service.Current.Proxy.InvokeAsync(TradeReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock1", 20, DateTime.Now));
+            await service.Current.Proxy.InvokeAsync(TradeReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock2", 30, DateTime.Now));
+            await service.Current.Proxy.InvokeAsync(TradeReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock3", 60, DateTime.Now));
+
+
+            await Task.Delay(500);
+
+            disposable.Dispose();
+            service.Disconnect();
+        }
     }
 }

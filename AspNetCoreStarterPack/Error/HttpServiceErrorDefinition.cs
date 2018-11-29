@@ -44,7 +44,7 @@ namespace AspNetCoreStarterPack.Error
                 HttpStatusCode = httpCode,
                 ServiceErrorModel = new ServiceErrorModel
                 {
-                    Reason = reason ?? nameof(httpCode),
+                    Reason = reason ?? httpCode.ToString(),
                     Details = details
                 }
             };
