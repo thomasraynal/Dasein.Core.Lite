@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <hubs>
+    <hub name="PriceHub">
+      <endpoint url="http://localhost:8181"></endpoint>
+      <endpoint url="http://localhost:8282"></endpoint>
+    </hub>
+    <hub name="EventHub">
+      <endpoint url="http://localhost:8686"></endpoint>
+    </hub>
+  </hubs>
+  <timeout>0</timeout>
+  <log>./Logs</log>
+</configuration>
