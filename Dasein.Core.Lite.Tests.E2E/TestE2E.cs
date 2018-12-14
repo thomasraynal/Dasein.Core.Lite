@@ -22,18 +22,6 @@ using System.Runtime.Serialization;
 namespace Test
 {
 
-    public class TestRegistry : Registry
-    {
-        public TestRegistry()
-        {
-            Scan(scanner =>
-            {
-                scanner.AssembliesAndExecutablesFromApplicationBaseDirectory();
-                scanner.WithDefaultConventions();
-            });
-        }
-    }
-
     [TestFixture]
     public class TestE2E
     {
@@ -239,10 +227,8 @@ namespace Test
         }
 
         [Test]
-        public async Task TestCache()
+        public async Task TestMethodCache()
         {
-
-            //Method Cache
             var prices = (await _priceClient.GetAllPrices()).ToList();
 
             await _priceClient.CreatePrice(new Price(Guid.NewGuid(), "XXX", 100.0, DateTime.Now));
@@ -256,9 +242,6 @@ namespace Test
             prices = (await _priceClient.GetAllPrices()).ToList();
 
             Assert.Greater(prices.Count(), actualPrices.Count());
-
-
-            //Aspnet core cache
 
         }
 

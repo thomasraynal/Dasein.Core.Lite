@@ -15,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dasein.Core.Lite.Shared", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dasein.Core.Lite.Demo.Desktop", "Demo\Dasein.Core.Lite.Demo.Desktop\Dasein.Core.Lite.Demo.Desktop.csproj", "{03A17764-1A1C-45F2-A8FB-776425124924}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dasein.Core.Lite.Tests", "Dasein.Core.Lite.Tests\Dasein.Core.Lite.Tests.csproj", "{C914226A-47FD-4117-B47D-26E4362D0909}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dasein.Core.Lite.Tests.E2E", "Dasein.Core.Lite.Tests.E2E\Dasein.Core.Lite.Tests.E2E.csproj", "{C914226A-47FD-4117-B47D-26E4362D0909}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dasein.Core.Lite.Event", "Dasein.Core.Lite.Events\Dasein.Core.Lite.Event.csproj", "{1C0147F8-CF42-4007-BDE7-7276BFF32EFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dasein.Core.Lite.Tests.Events", "Dasein.Core.Lite.Tests.Events\Dasein.Core.Lite.Tests.Events.csproj", "{555E2132-609D-4549-A4FA-DE75F79B6DCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{C914226A-47FD-4117-B47D-26E4362D0909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C914226A-47FD-4117-B47D-26E4362D0909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C914226A-47FD-4117-B47D-26E4362D0909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C0147F8-CF42-4007-BDE7-7276BFF32EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C0147F8-CF42-4007-BDE7-7276BFF32EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C0147F8-CF42-4007-BDE7-7276BFF32EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C0147F8-CF42-4007-BDE7-7276BFF32EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{555E2132-609D-4549-A4FA-DE75F79B6DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{555E2132-609D-4549-A4FA-DE75F79B6DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{555E2132-609D-4549-A4FA-DE75F79B6DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{555E2132-609D-4549-A4FA-DE75F79B6DCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
