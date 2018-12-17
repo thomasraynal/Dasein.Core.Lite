@@ -1,13 +1,66 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Dasein.Core.Lite.Hosting;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace Dasein.Core.Lite
 {
     public static class MvcBuilderExtensions
     {
+        public static void RegisterValidatorsFromAssemblies(this FluentValidationMvcConfiguration builder, Func<Assembly, bool> canScan = null)
+        {
+            if (null == canScan) canScan = (file) => true;
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    if (!canScan(assembly)) continue;
+                    builder.RegisterValidatorsFromAssembly(assembly);
+                }
+                catch (BadImageFormatException)
+                {
+                }
+                catch (FileLoadException)
+                {
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+        }
+
+        public static IMvcBuilder AddApplicationPart(this IMvcBuilder builder, Func<Assembly, bool> canScan = null)
+        {
+            if (null == canScan) canScan = (file) => true;
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    if (!canScan(assembly)) continue;
+                    builder.AddApplicationPart(assembly);
+                }
+                catch (BadImageFormatException)
+                {
+                }
+                catch (FileLoadException)
+                {
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            return builder;
+        }
+
         public static IMvcBuilder RegisterJsonSettings(this IMvcBuilder builder, JsonSerializerSettings settings)
         {
             builder.Services.AddSingleton(settings);

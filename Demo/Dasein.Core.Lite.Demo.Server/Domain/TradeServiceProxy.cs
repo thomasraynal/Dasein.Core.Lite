@@ -7,22 +7,25 @@ using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Dasein.Core.Lite.Demo.Server
 {
-    public class TradeServiceMiddleware : MiddlewareBase<ITradeService>, ITradeService
+    public class TradeServiceProxy : ServiceProxyBase<ITradeService>, ITradeService
     {
         private ISignalRService<TradeEvent, TradeEventRequest> _tradeEventService;
 
-        public TradeServiceMiddleware()
+        public static string middlewareKey = "PROCESSED_BY_MIDDLEWARE";
+
+        public TradeServiceProxy()
         {
-            Task.Delay(1000).ContinueWith((_) =>
+            Task.Delay(500).ContinueWith((_) =>
             {
                 _tradeEventService = SignalRServiceBuilder<TradeEvent, TradeEventRequest>
                                   .Create()
                                   .Build(new TradeEventRequest((p) => true));
 
-                _tradeEventService.Connect(Scheduler.Default, 1000);
+                _tradeEventService.Connect(Scheduler.Default, 0);
             });
 
         }
@@ -36,6 +39,9 @@ namespace Dasein.Core.Lite.Demo.Server
             {
                 //wait for the client to fetch the new trade...
                 await Task.Delay(1000);
+
+                //if signalr is still trying to get a running instance, just bypass the process... 
+                if (null == _tradeEventService.Current) return;
 
                 await _tradeEventService.Current.Proxy.InvokeAsync(TradeServiceReferential.RaiseTradeEvent, new TradeEvent()
                 {
@@ -76,9 +82,20 @@ namespace Dasein.Core.Lite.Demo.Server
             return await Service.GetAllTrades();
         }
 
+        public async Task<IEnumerable<ITrade>> GetAllTradesViaMiddleware()
+        {
+            var trades = await Service.GetAllTrades();
+            return trades.Select(trade => new Trade(trade.Id, trade.Date, trade.Counterparty, $"{trade.Asset} [{middlewareKey}]", trade.Status, trade.Way, trade.PriceOnTransaction, trade.Volume));
+        }
+
         public async Task<ITrade> GetTradeById(Guid tradeId)
         {
             return await Service.GetTradeById(tradeId);
+        }
+
+        public Task<IEnumerable<ITrade>> GetAllTradesViaCache()
+        {
+            throw new NotImplementedException();
         }
     }
 }

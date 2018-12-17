@@ -15,6 +15,8 @@ namespace Dasein.Core.Lite.Demo.Server
         [HttpPut]
         public async Task<ActionResult<TradeCreationResult>> CreateTrade([FromBody] TradeCreationRequest request)
         {
+            var valid = this.ModelState.IsValid;
+
             var tradeResult = await Service.CreateTrade(request);
             return CreatedAtAction(nameof(GetTradeById), new { tradeId = tradeResult.TradeId }, tradeResult);
         }
@@ -24,6 +26,22 @@ namespace Dasein.Core.Lite.Demo.Server
         public async Task<IEnumerable<ITrade>> GetAllTrades()
         {
             return await Service.GetAllTrades();
+        }
+
+        //[Authorize(TradeServiceReferential.TraderUserPolicy)]
+        [HttpGet("cached")]
+        [ResponseCache(Duration = 30)]
+        public async Task<IEnumerable<ITrade>> GetAllTradesViaCache()
+        {
+            return await Service.GetAllTrades();
+        }
+
+
+        [Authorize(TradeServiceReferential.TraderUserPolicy)]
+        [HttpGet("middleware")]
+        public async Task<IEnumerable<ITrade>> GetAllTradesViaMiddleware()
+        {
+            return await Service.GetAllTradesViaMiddleware();
         }
 
         [Authorize(TradeServiceReferential.TraderUserPolicy)]

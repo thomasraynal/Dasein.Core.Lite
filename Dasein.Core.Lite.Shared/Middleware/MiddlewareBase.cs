@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dasein.Core.Lite
+namespace Dasein.Core.Lite.Shared
 {
-    public abstract class MiddlewareBase<TService> : IMiddleware<TService> 
+    public abstract class ServiceProxyBase<TService> : IServiceProxy<TService> 
     {
         private TService _service;
         public TService Service

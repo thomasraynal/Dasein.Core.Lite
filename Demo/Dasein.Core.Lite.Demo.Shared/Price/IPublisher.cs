@@ -5,5 +5,6 @@ namespace Dasein.Core.Lite.Demo.Shared
     public interface IPublisher
     {
         Task Start();
+        Task Stop();
     }
 }

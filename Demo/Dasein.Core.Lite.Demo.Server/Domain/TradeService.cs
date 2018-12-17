@@ -57,6 +57,16 @@ namespace Dasein.Core.Lite.Demo.Server
             return Task.FromResult(_repository.Cast<ITrade>());
         }
 
+        public Task<IEnumerable<ITrade>> GetAllTradesViaCache()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<ITrade>> GetAllTradesViaMiddleware()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ITrade> GetTradeById(Guid tradeId)
         {
             return Task.FromResult(_repository.FirstOrDefault(trade => trade.Id == tradeId));

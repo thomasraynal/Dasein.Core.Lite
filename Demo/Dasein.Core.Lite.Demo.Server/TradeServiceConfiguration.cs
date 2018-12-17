@@ -9,6 +9,5 @@ namespace Dasein.Core.Lite.Demo.Server
     {
         public override string Name { get; set; }
         public override int Version { get; set; }
-        public string Key { get; set; }
     }
 }

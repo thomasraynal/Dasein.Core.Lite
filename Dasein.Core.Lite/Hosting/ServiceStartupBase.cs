@@ -14,11 +14,10 @@ namespace Dasein.Core.Lite
 {
     public abstract class ServiceStartupBase<TConfiguration> : ICanLog where TConfiguration : ServiceConfigurationBase
     {
-        private readonly string serviceConfiguration = "serviceConfiguration";
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            ServiceConfiguration = Configuration.GetSection(serviceConfiguration).Get<TConfiguration>();
+            ServiceConfiguration = Configuration.GetSection(ServiceConstants.serviceConfiguration).Get<TConfiguration>();
 
             services.AddSingleton(ServiceConfiguration);
             services.AddSingleton<IServiceConfiguration>(ServiceConfiguration);
@@ -29,11 +28,6 @@ namespace Dasein.Core.Lite
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = new ApiVersion(ServiceConfiguration.Version, 0);
-            });
-
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc($"{ServiceConfiguration.Name} v{ServiceConfiguration.Version}", new Info { Title = ServiceConfiguration.Name, Version = ServiceConfiguration.Version.ToString() });
             });
 
             ConfigureServicesInternal(services);
@@ -96,11 +90,6 @@ namespace Dasein.Core.Lite
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint($"/swagger/v{ServiceConfiguration.Version}/swagger.json", $"API [{ServiceConfiguration.Name}] v.{ServiceConfiguration.Version}");
-            });
 
             app.UseServiceExceptionHandler();
 

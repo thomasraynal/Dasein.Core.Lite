@@ -2,6 +2,7 @@
 using Dasein.Core.Lite;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Dasein.Core.Lite.Shared;
 
 namespace Dasein.Core.Lite.Demo.Server
 {
@@ -15,7 +16,7 @@ namespace Dasein.Core.Lite.Demo.Server
         }
 
         [HttpPost]
-        public async Task<TradeServiceToken> Login([FromBody] UserCredentials credentials)
+        public async Task<TradeServiceToken> Login([FromBody] Credentials credentials)
         {
             return await _userService.Login(credentials);
         }

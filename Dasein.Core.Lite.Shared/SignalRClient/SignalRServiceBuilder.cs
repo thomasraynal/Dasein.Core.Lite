@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http.Connections.Client;
 namespace Dasein.Core.Lite.Shared
 {
 
-    public class SignalRServiceBuilder<TDto, TRequest> where TRequest : IHubRequest<TDto>
+    public class SignalRServiceBuilder<TDto, TRequest> where TRequest : class, IHubRequest<TDto>
     {
         public static SignalRServiceBuilder<TDto, TRequest> Create()
         {

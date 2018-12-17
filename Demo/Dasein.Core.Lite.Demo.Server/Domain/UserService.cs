@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Dasein.Core.Lite.Demo.Shared;
+using Dasein.Core.Lite.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -18,7 +19,7 @@ namespace Dasein.Core.Lite.Demo.Server
             _serviceConfiguration = serviceConfiguration;
         }
 
-        private ClaimsIdentity GetUser(UserCredentials credentials)
+        private ClaimsIdentity GetUser(Credentials credentials)
         {
             var user = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
 
@@ -33,7 +34,7 @@ namespace Dasein.Core.Lite.Demo.Server
             return user;
         }
 
-        public Task<TradeServiceToken> Login(UserCredentials credentials)
+        public Task<TradeServiceToken> Login(Credentials credentials)
         {
             var now = DateTime.Now;
             var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_serviceConfiguration.Key));

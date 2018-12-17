@@ -10,16 +10,17 @@ using System.Threading.Tasks;
 
 namespace Dasein.Core.Lite.Demo.Server
 {
-    public class PricePublisher : IPublisher, IDisposable, ICanLog
+    public class PricePublisher : IPublisher, ICanLog
     {
         private Random _rand;
-        private IHubContext<PriceHub> _priceHub;
+        private PriceHub _priceHub;
         private IPriceService _priceService;
         private List<IPrice> _priceHistory;
+        private IDisposable _priceGenerator;
         private IServiceConfiguration _configuration;
         private CompositeDisposable _dispose;
 
-        public PricePublisher(IHubContext<PriceHub> priceHub, IPriceService priceService, IServiceConfiguration configuration)
+        public PricePublisher(PriceHub priceHub, IPriceService priceService, IServiceConfiguration configuration)
         {
             _rand = new Random();
 
@@ -32,9 +33,10 @@ namespace Dasein.Core.Lite.Demo.Server
 
         public async Task Start()
         {
+
             _priceHistory = new List<IPrice>(await _priceService.GetAllPrices());
 
-            var priceGenerator = Observable
+            _priceGenerator = Observable
               .Interval(TimeSpan.FromMilliseconds(250))
               .Delay(TimeSpan.FromMilliseconds(50))
               .Subscribe(async _ =>
@@ -45,17 +47,11 @@ namespace Dasein.Core.Lite.Demo.Server
                   await _priceService.CreatePrice(price);
 
                   _priceHistory.Add(price);
-
-                  await _priceHub.Clients.All.SendAsync(TradeServiceReferential.OnPriceChanged, price);
+                  await _priceHub.RaisePriceChanged(price);
 
               });
 
-            _dispose.Add(priceGenerator);
-        }
-
-        public void Dispose()
-        {
-            _dispose.Dispose();
+            _dispose.Add(_priceGenerator);
         }
 
         private const double maxDeviation = 0.20;
@@ -93,6 +89,12 @@ namespace Dasein.Core.Lite.Demo.Server
             }
 
             return new Price(Guid.NewGuid(), asset.Name, newPrice, DateTime.Now);
+        }
+
+        public Task Stop()
+        {
+            _priceGenerator.Dispose();
+            return Task.CompletedTask;
         }
     }
 }

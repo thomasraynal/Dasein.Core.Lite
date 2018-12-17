@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dasein.Core.Lite
+namespace Dasein.Core.Lite.Shared
 {
     public interface IService<TService>
     {

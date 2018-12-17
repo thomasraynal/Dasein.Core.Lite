@@ -14,5 +14,9 @@ namespace Dasein.Core.Lite.Demo.Shared
         Task<IEnumerable<ITrade>> GetAllTrades();
         [Get("/api/v1/trade/{tradeId}")]
         Task<ITrade> GetTradeById(Guid tradeId);
+        [Get("/api/v1/trade/middleware")]
+        Task<IEnumerable<ITrade>> GetAllTradesViaMiddleware();
+        [Get("/api/v1/trade/cached")]
+        Task<IEnumerable<ITrade>> GetAllTradesViaCache();
     }
 }

@@ -22,7 +22,7 @@
     "hubs": [
       {
         "name": "PriceHub",
-        "endpoints": [ "http://localhost:8080/hub/price" ]
+        "endpoints": [ "http://localhost:8888/hub/price", "http://localhost:8080/hub/price" ]
       },
       {
         "name": "TradeEventHub",

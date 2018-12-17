@@ -11,6 +11,12 @@ namespace Dasein.Core.Lite.Shared
             Duration = duration;
         }
 
+        public Cached()
+        {
+            Duration = AppCore.Instance.Get<IServiceConfiguration>().CacheDuration;
+        }
+
         public long Duration { get; set; }
+        public bool IsUserBounded { get; set; }
     }
 }

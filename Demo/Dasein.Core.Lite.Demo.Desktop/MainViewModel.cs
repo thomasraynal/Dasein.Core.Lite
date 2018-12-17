@@ -72,7 +72,7 @@ namespace Dasein.Core.Lite.Demo.Desktop
                                                   .Build(TradeServiceReferential.ServiceHost)
                                                   .Create();
 
-            _userToken = _authService.Login(new UserCredentials()
+            _userToken = _authService.Login(new Credentials()
             {
                 Username = "EQ-Trader",
                 Password = "password"

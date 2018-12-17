@@ -9,7 +9,7 @@ namespace Dasein.Core.Lite
     {
         public static TService GetService<TService>(this IAppContainer container)
         {
-            var middleware = (TService)container.ObjectProvider.TryGetInstance<IMiddleware<TService>>();
+            var middleware = (TService)container.ObjectProvider.TryGetInstance<IServiceProxy<TService>>();
             if (null != middleware) return middleware;
             return container.Get<TService>();
         }

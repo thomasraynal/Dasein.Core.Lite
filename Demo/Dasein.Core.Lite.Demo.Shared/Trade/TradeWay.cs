@@ -6,6 +6,7 @@ namespace Dasein.Core.Lite.Demo.Shared
 {
     public enum TradeWay
     {
+        None,
         Buy,
         Sell
     }

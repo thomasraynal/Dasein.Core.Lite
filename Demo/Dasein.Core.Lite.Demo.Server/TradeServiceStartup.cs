@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Dasein.Core.Lite.Hosting;
 
 namespace Dasein.Core.Lite.Demo.Server
 {
@@ -28,11 +29,11 @@ namespace Dasein.Core.Lite.Demo.Server
             {
                 scanner.AssembliesAndExecutablesFromApplicationBaseDirectory();
                 scanner.WithDefaultConventions();
-                scanner.AddAllTypesOf<IPublisher>();
                 scanner.ConnectImplementationsToTypesClosing(typeof(ISignalRService<,>));
-                scanner.ConnectImplementationsToTypesClosing(typeof(IMiddleware<>)).OnAddedPluginTypes(p => p.Singleton());
+                scanner.ConnectImplementationsToTypesClosing(typeof(IServiceProxy<>)).OnAddedPluginTypes(p => p.Singleton());
             });
 
+            this.For<IPublisher>().Use<PricePublisher>().Singleton();
             this.RegisterService<ITradeService, TradeService>();
             this.RegisterCacheProxy<IPriceService, PriceService>();
 
@@ -56,6 +57,8 @@ namespace Dasein.Core.Lite.Demo.Server
             services.AddTransient<IAuthorizationHandler, ClaimRequirementHandler>();
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IMemoryCache, ResponseMemoryCache>();
+
+            this.AddSwagger(services);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -103,13 +106,15 @@ namespace Dasein.Core.Lite.Demo.Server
 
             services.AddResponseCaching();
 
-            services.AddMvc()
+            services.AddMvc(options =>
+                    {
+                        options.Filters.Add(typeof(ValidateModelStateAttribute));
+                    })
                     .RegisterJsonSettings(jsonSettings)
-                    .AddFluentValidation(validation => validation.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
-           
+                    .AddFluentValidation(config => config.RegisterValidatorsFromAssemblies((assembly) => assembly.FullName.Contains("Dasein.Core.Lite.Demo")));
         }
 
-        protected override void OnApplicationStart()
+    protected override void OnApplicationStart()
         {
             
             Task.Delay(500).Wait();
@@ -124,6 +129,8 @@ namespace Dasein.Core.Lite.Demo.Server
 
         protected override void ConfigureInternal(IApplicationBuilder app)
         {
+            this.UseSwagger(app);
+
             app.UseAuthentication();
 
             app.UseSignalR(routes =>

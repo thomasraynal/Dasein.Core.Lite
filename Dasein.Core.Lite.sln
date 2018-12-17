@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dasein.Core.Lite.Tests.E2E"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dasein.Core.Lite.Event", "Dasein.Core.Lite.Events\Dasein.Core.Lite.Event.csproj", "{1C0147F8-CF42-4007-BDE7-7276BFF32EFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dasein.Core.Lite.Tests.Events", "Dasein.Core.Lite.Tests.Events\Dasein.Core.Lite.Tests.Events.csproj", "{555E2132-609D-4549-A4FA-DE75F79B6DCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dasein.Core.Lite.Tests.Events", "Dasein.Core.Lite.Tests.Events\Dasein.Core.Lite.Tests.Events.csproj", "{555E2132-609D-4549-A4FA-DE75F79B6DCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

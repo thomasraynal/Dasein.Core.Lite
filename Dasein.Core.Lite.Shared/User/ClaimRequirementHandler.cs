@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dasein.Core.Lite.Demo.Shared
+namespace Dasein.Core.Lite.Shared
 {
     public class ClaimRequirementHandler : AuthorizationHandler<ClaimRequirement>
     {

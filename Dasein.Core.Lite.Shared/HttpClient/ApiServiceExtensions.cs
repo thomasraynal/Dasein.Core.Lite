@@ -10,12 +10,12 @@ namespace Dasein.Core.Lite.Shared
     {
         public const string BearerScheme = "Bearer";
 
-        public static ApiServiceBuilder<TServiceContract> AddHeader<TServiceContract>(this ApiServiceBuilder<TServiceContract> builder, String header, Func<String> getToken) where TServiceContract : class
+        public static ApiServiceBuilder<TServiceContract> AddHeader<TServiceContract>(this ApiServiceBuilder<TServiceContract> builder, String header, Func<String> getValue) where TServiceContract : class
         {
-            var token = getToken();
+            var value = getValue();
             builder.AddHandler((headers) =>
             {
-                headers.Add(header, token);
+                headers.Add(header, value);
             });
 
             return builder;

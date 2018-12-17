@@ -9,7 +9,7 @@ namespace Dasein.Core.Lite.Demo.Shared
 {
     public interface IPriceService
     {
-        [Cached(1000)]
+        [Cached(500)]
         [Get("/api/v1/price")]
         Task<IEnumerable<IPrice>> GetAllPrices();
 

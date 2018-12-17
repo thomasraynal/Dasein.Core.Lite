@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Dasein.Core.Lite.Demo.Shared
+namespace Dasein.Core.Lite.Shared
 {
-    public class UserCredentials
+    public class Credentials
     {
         public string Username { get; set; }
         public string Password { get; set; }
