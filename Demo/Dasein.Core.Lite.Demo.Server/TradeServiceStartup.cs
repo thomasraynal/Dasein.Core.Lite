@@ -18,6 +18,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Dasein.Core.Lite.Hosting;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Dasein.Core.Lite.Demo.Server
 {
@@ -34,9 +35,6 @@ namespace Dasein.Core.Lite.Demo.Server
             });
 
             this.For<IPublisher>().Use<PricePublisher>().Singleton();
-            this.RegisterService<ITradeService, TradeService>();
-            this.RegisterCacheProxy<IPriceService, PriceService>();
-
         }
     }
 
@@ -58,7 +56,7 @@ namespace Dasein.Core.Lite.Demo.Server
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IMemoryCache, ResponseMemoryCache>();
 
-            this.AddSwagger(services);
+            services.AddSwagger(ServiceConfiguration);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -129,7 +127,7 @@ namespace Dasein.Core.Lite.Demo.Server
 
         protected override void ConfigureInternal(IApplicationBuilder app)
         {
-            this.UseSwagger(app);
+            app.UseSwagger(ServiceConfiguration);
 
             app.UseAuthentication();
 
@@ -138,6 +136,8 @@ namespace Dasein.Core.Lite.Demo.Server
                 routes.MapHub<PriceHub>("/hub/price");
                 routes.MapHub<TradeEventHub>("/hub/trade");
             });
+
+            app.UseServiceExceptionHandler();
 
             app.UseResponseCaching();
 

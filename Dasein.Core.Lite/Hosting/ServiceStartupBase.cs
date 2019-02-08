@@ -18,7 +18,7 @@ namespace Dasein.Core.Lite
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             ServiceConfiguration = Configuration.GetSection(ServiceConstants.serviceConfiguration).Get<TConfiguration>();
-
+            
             services.AddSingleton(ServiceConfiguration);
             services.AddSingleton<IServiceConfiguration>(ServiceConfiguration);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -37,10 +37,12 @@ namespace Dasein.Core.Lite
 
         public TConfiguration ServiceConfiguration { get; private set; }
         public IConfiguration Configuration { get; private set; }
+        public IHostingEnvironment HostingEnvironment { get; private set; }
 
         public ServiceStartupBase(IHostingEnvironment env, IConfiguration configuration)
         {
             Configuration = configuration;
+            HostingEnvironment = env;
 
             AppCore.Instance.ObjectProvider.Configure(config =>
             {
@@ -90,9 +92,6 @@ namespace Dasein.Core.Lite
 
         public void Configure(IApplicationBuilder app)
         {
-
-            app.UseServiceExceptionHandler();
-
             ConfigureInternal(app);
         }
 

@@ -15,7 +15,7 @@ namespace Dasein.Core.Lite
     {
         public const String serviceConfigFile = "config.json";
 
-        public virtual IConfigurationBuilder Configure(IConfigurationBuilder builder)
+        protected virtual IConfigurationBuilder Configure(IConfigurationBuilder builder)
         {
             return builder;
         }
@@ -23,8 +23,9 @@ namespace Dasein.Core.Lite
         public IWebHost Build(params string[] args)
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile(serviceConfigFile, true, true)
-                .AddCommandLine(args);
+                .AddJsonFile(serviceConfigFile, false, true)
+                .AddCommandLine(args)
+                .AddEnvironmentVariables();
 
             builder = Configure(builder);
 

@@ -34,20 +34,28 @@ namespace Dasein.Core.Lite.Shared
             return builder;
         }
 
-        public TServiceContract Create()
+        public TServiceContract Create(HttpClient client = null, RefitSettings refitSettings = null)
         {
-            var client = new HttpClient(_handler)
+            if (null == client)
             {
-                Timeout = TimeSpan.FromMinutes(60),
-                BaseAddress = new Uri(_apiRoot)
-            };
+                client = new HttpClient(_handler)
+                {
+                    Timeout = TimeSpan.FromMinutes(60),
+                    BaseAddress = new Uri(_apiRoot)
+                };
+            }
 
-            var settings = AppCore.Instance.Get<JsonSerializerSettings>();
-
-            return RestService.For<TServiceContract>(client, new RefitSettings
+            if (null == refitSettings)
             {
-                JsonSerializerSettings = settings
-            });
+                var settings = AppCore.Instance.Get<JsonSerializerSettings>();
+
+                refitSettings = new RefitSettings()
+                {
+                    JsonSerializerSettings = settings
+                };
+            }
+            
+            return RestService.For<TServiceContract>(client, refitSettings);
         }
     }
 }

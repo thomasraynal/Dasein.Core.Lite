@@ -10,6 +10,17 @@ namespace Dasein.Core.Lite.Demo.Shared
 
     public static class TradeServiceReferential
     {
+        public static T Random<T>(this IEnumerable<T> enumerable)
+        {
+            if (enumerable == null)
+            {
+                throw new ArgumentNullException(nameof(enumerable));
+            }
+
+            var list = enumerable as IList<T> ?? enumerable.ToList();
+            return list.Count == 0 ? default(T) : list[Rand.Next(0, list.Count)];
+        }
+
         public const string TraderUserPolicy = "TraderUserPolicy";
         public const string EquityTraderUserPolicy = "EquityTraderUserPolicy";
         public const string TraderClaimValue = "Trader";

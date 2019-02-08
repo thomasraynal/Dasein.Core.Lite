@@ -13,14 +13,14 @@ namespace Dasein.Core.Lite.Demo.Server
     public class PricePublisher : IPublisher, ICanLog
     {
         private Random _rand;
-        private PriceHub _priceHub;
+        private IHubContext<PriceHub> _priceHub;
         private IPriceService _priceService;
         private List<IPrice> _priceHistory;
         private IDisposable _priceGenerator;
         private IServiceConfiguration _configuration;
         private CompositeDisposable _dispose;
 
-        public PricePublisher(PriceHub priceHub, IPriceService priceService, IServiceConfiguration configuration)
+        public PricePublisher(IHubContext<PriceHub> priceHub, IPriceService priceService, IServiceConfiguration configuration)
         {
             _rand = new Random();
 
@@ -47,7 +47,7 @@ namespace Dasein.Core.Lite.Demo.Server
                   await _priceService.CreatePrice(price);
 
                   _priceHistory.Add(price);
-                  await _priceHub.RaisePriceChanged(price);
+                  await _priceHub.Clients.All.SendAsync(TradeServiceReferential.OnPriceChanged, price);
 
               });
 

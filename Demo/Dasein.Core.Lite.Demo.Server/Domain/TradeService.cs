@@ -14,6 +14,7 @@ namespace Dasein.Core.Lite.Demo.Server
     {
         private readonly List<ITrade> _repository;
         private ISignalRService<TradeEvent, TradeEventRequest> _tradeEventService;
+        private ISignalRService<Price, PriceRequest> _priceEventService;
 
         public TradeService()
         {
@@ -33,8 +34,15 @@ namespace Dasein.Core.Lite.Demo.Server
                                .Subscribe((tradeEvent) =>
                                {
                                    var trade = _repository.FirstOrDefault(t => t.Id == tradeEvent.TradeId);
+                                   if (null == trade) return;
                                    trade.Status = tradeEvent.Status;
                                });
+
+            _priceEventService = SignalRServiceBuilder<Price, PriceRequest>
+                                            .Create()
+                                            .Build(new PriceRequest((p) => true));
+
+
         }
 
         public Task<TradeCreationResult> CreateTrade(TradeCreationRequest request)

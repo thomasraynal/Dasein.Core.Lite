@@ -23,9 +23,9 @@ namespace Dasein.Core.Lite
             _context = context;
         }
 
-        protected Task RaiseChange(TDto change, String method)
+        public Task RaiseChange(TDto change, String method)
         {
-            foreach(var connection in _context.Groups)
+            foreach (var connection in _context.Groups)
             {
                 if (connection.Value(change)) this.Clients.Client(connection.Key).SendAsync(method, change);
             }

@@ -1,6 +1,7 @@
 ﻿using Dasein.Core.Lite.Shared;
 using GraphQL;
 using GraphQL.Types;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,14 @@ namespace Dasein.Core.Lite
             _documentExecuter = documentExecuter;
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] GraphQLQuery query)
+        public virtual async Task<IActionResult> Post([FromBody] GraphQLQuery query)
+        {
+            return await PostInternal(query);
+        }
+
+        protected async Task<IActionResult> PostInternal(GraphQLQuery query)
         {
             if (null == query) throw new InvalidGraphQLRequestException("GraphQLQuery cannot be resolved");
 

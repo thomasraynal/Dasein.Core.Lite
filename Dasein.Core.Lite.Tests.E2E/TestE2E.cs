@@ -18,6 +18,7 @@ using GraphQL.Client;
 using System.Linq;
 using System.Threading;
 using System.Runtime.Serialization;
+using System.Net.Http.Headers;
 
 namespace Dasein.Core.Lite.Tests
 {
@@ -28,9 +29,11 @@ namespace Dasein.Core.Lite.Tests
         private Host<TradeServiceStartup> _host;
         private IWebHost _app;
         private IServiceConfiguration _configuration;
-        private TradeServiceToken _traderToken;
+        private static TradeServiceToken _traderToken;
         private ITradeService _tradeClient;
         private IPriceService _priceClient;
+
+        //Use test server
 
         [OneTimeSetUp]
         public void SetUp()
@@ -71,6 +74,8 @@ namespace Dasein.Core.Lite.Tests
         [OneTimeTearDown]
         public async Task TearDown()
         {
+            await Task.Delay(3000);
+
             await _app.StopAsync();
         }
 
@@ -128,7 +133,7 @@ namespace Dasein.Core.Lite.Tests
             var jsonError = await client.GetAsync("http://localhost:8080/api/v1/trade");
             var error = JsonConvert.DeserializeObject<ServiceErrorModel>(await jsonError.Content.ReadAsStringAsync());
 
-            Assert.IsNotNull(error);
+            Assert.IsNotNull(error, "erroe should be send to the client in json format");
             Assert.AreEqual("User must have role [Trader]", error.Details);
             Assert.AreEqual("Unauthorized", error.Reason);
 
@@ -159,6 +164,8 @@ namespace Dasein.Core.Lite.Tests
         {
             protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _traderToken.Digest);
+
                 var response = await base.SendAsync(request, cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
@@ -176,7 +183,11 @@ namespace Dasein.Core.Lite.Tests
             var options = new GraphQLClientOptions()
             {
                 JsonSerializerSettings = AppCore.Instance.Get<JsonSerializerSettings>(),
-                //HttpMessageHandler = new TestHttpHandler()
+                HttpMessageHandler = new TestHttpHandler()
+                {
+                    InnerHandler = new HttpClientHandler()
+        }
+
             };
 
             var graphQLClient = new GraphQLClient("http://localhost:8080/api/v1/graphql/trades", options);
@@ -221,10 +232,10 @@ namespace Dasein.Core.Lite.Tests
 
             Assert.IsNotNull(queryResult.Data.prices);
 
-            //Assert.CatchAsync(async () =>
-            //{
-            //    var resultss = await graphQLClient.PostAsync(faultyQuery);
-            //});
+            Assert.CatchAsync(async () =>
+            {
+                var resultss = await graphQLClient.PostAsync(faultyQuery);
+            });
 
         }
 

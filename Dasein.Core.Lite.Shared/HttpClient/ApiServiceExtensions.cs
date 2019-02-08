@@ -12,9 +12,9 @@ namespace Dasein.Core.Lite.Shared
 
         public static ApiServiceBuilder<TServiceContract> AddHeader<TServiceContract>(this ApiServiceBuilder<TServiceContract> builder, String header, Func<String> getValue) where TServiceContract : class
         {
-            var value = getValue();
             builder.AddHandler((headers) =>
             {
+                var value = getValue();
                 headers.Add(header, value);
             });
 
@@ -23,9 +23,9 @@ namespace Dasein.Core.Lite.Shared
 
         public static ApiServiceBuilder<TServiceContract> AddAuthorizationHeader<TServiceContract>(this ApiServiceBuilder<TServiceContract> builder,  Func<String> getToken) where TServiceContract : class
         {
-            var token = getToken();
             builder.AddHandler((headers) =>
             {
+                var token = getToken();
                 headers.Authorization = new AuthenticationHeaderValue(BearerScheme, token);
             });
 
