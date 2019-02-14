@@ -1,5 +1,6 @@
 ﻿using GraphQL.Builders;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
@@ -16,13 +17,18 @@ namespace Dasein.Core.Lite.Shared
         private readonly String _hubName;
         private Func<HubConnectionBuilder> _getBuilder;
         private int _currentIndex;
-        
-        public ConnectionProvider(HubDescriptor config, IHubRequestFilter request, Func<HubConnectionBuilder> getBuilder)
+        private readonly Action<HttpConnectionOptions> _httpConnectionOptions;
+        private readonly HttpTransportType _transportType;
+
+
+        public ConnectionProvider(HubDescriptor config, IHubRequestFilter request, HttpTransportType transports, Action<HttpConnectionOptions> configureHttpConnection, Func<HubConnectionBuilder> getBuilder)
         {
             _servers = config.Endpoints;
             _servers.Shuffle();
             _request = request;
             _hubName = config.Name;
+            _httpConnectionOptions = configureHttpConnection;
+            _transportType = transports;
             _getBuilder = getBuilder;
         }
 
@@ -45,12 +51,19 @@ namespace Dasein.Core.Lite.Shared
 
         public IServiceConnection GetNextConnection(Action onError, Action onSuccess, String endpoint = null)
         {
-            var next= Next(endpoint);
+            var next = Next(endpoint);
 
-            var connection = _getBuilder()
-                    .WithQuery(next,_request)
+            var builder = _getBuilder();
+
+            var opts = new HttpConnectionOptions();
+
+            _httpConnectionOptions(opts);
+
+            var connection = builder
+                    .WithQuery(next, _request, _transportType, _httpConnectionOptions)
                     .Build();
-            
+
+
             return new Connection(next, connection, onError, onSuccess);
         }
 

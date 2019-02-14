@@ -7,6 +7,8 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Dasein.Core.Lite.Shared
@@ -20,13 +22,15 @@ namespace Dasein.Core.Lite.Shared
         private bool _isServiceActive;
         private CancellationToken _cancel;
         private IDisposable _resilientStreamProcess;
-        private readonly Action _onError;
-        private readonly Action _onSuccess;
+        private Action _onError;
+        private Action _onSuccess;
 
         public abstract String HubName { get; }
         public abstract String OnStreamUpdateMethodName { get; }
         public TRequest Request { get; }
-        public IObservable<bool> IsActive { get; }
+        public Action<HttpConnectionOptions> HttpConnectionOptions { get; }
+        public HttpTransportType TransportType { get; }
+        public IObservable<bool> IsActive { get; private set; }
         public IConnectionProvider ConnectionProvider { get; private set; }
         public abstract Func<HubConnectionBuilder> ConnectionBuilderProvider { get; }
         public IServiceConnection Current { get; private set; }
@@ -44,9 +48,22 @@ namespace Dasein.Core.Lite.Shared
             _activitySubject.OnNext(_isServiceActive);
         }
 
-        public SignalRServiceClientBase(TRequest request)
+
+        public SignalRServiceClientBase(TRequest request, HttpTransportType transports, Action<HttpConnectionOptions> configureHttpConnection)
         {
             Request = request;
+            TransportType = transports;
+            HttpConnectionOptions = configureHttpConnection;
+
+            InitializeInternal();
+        }
+
+        protected virtual void Initialize()
+        {
+        }
+
+        private void InitializeInternal()
+        {
 
             _activitySubject = new Subject<bool>();
 
@@ -56,9 +73,10 @@ namespace Dasein.Core.Lite.Shared
 
             IsActive = _activitySubject.AsObservable();
 
+            Initialize();
         }
 
-        public void Initialize()
+        public void BuildInternal()
         {
             var config = AppCore.Instance.Get<IHubConfiguration>();
 
@@ -66,7 +84,7 @@ namespace Dasein.Core.Lite.Shared
 
             if (null == hubConfig) throw new MissingHubConfigException(HubName);
 
-            ConnectionProvider = new ConnectionProvider(hubConfig, Request, ConnectionBuilderProvider);
+            ConnectionProvider = new ConnectionProvider(hubConfig, Request, TransportType, HttpConnectionOptions, ConnectionBuilderProvider);
         }
 
         public IObservable<TDto> Connect(IScheduler scheduler, long connectionTimeoutDelay)

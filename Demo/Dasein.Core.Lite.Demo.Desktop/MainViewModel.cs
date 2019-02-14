@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using Dasein.Core.Lite.Shared;
 using Dasein.Core.Lite.Demo.Shared;
+using System.Threading.Tasks;
 
 namespace Dasein.Core.Lite.Demo.Desktop
 {
@@ -86,7 +87,10 @@ namespace Dasein.Core.Lite.Demo.Desktop
 
             _priceEventService = SignalRServiceBuilder<Price, PriceRequest>
                                                         .Create()
-                                                        .Build(new PriceRequest((p) => true));                                    
+                                                        .Build(new PriceRequest((p) => true), (opts) =>
+                                                        {
+                                                            opts.AccessTokenProvider = () => Task.FromResult(_userToken.Digest);
+                                                        });
 
             _priceEventService
                 .Connect(Scheduler.Default, 1000)
@@ -104,8 +108,10 @@ namespace Dasein.Core.Lite.Demo.Desktop
 
             _tradeEventService = SignalRServiceBuilder<TradeEvent, TradeEventRequest>
                                                         .Create()
-                                                        .Build(new TradeEventRequest((p) => true));
-                                                        //.AddAuthorizationHeader(() => _userToken.Digest)
+                                                        .Build(new TradeEventRequest((p) => true), (opts) =>
+                                                        {
+                                                            opts.AccessTokenProvider = () => Task.FromResult(_userToken.Digest);
+                                                        });
 
             _tradeEventService
                 .Connect(Scheduler.Default, 500)

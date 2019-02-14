@@ -17,13 +17,23 @@ namespace Dasein.Core.Lite.Demo.Server
 
         public static string middlewareKey = "PROCESSED_BY_MIDDLEWARE";
 
-        public TradeServiceProxy()
+        public TradeServiceProxy(IUserService userService)
         {
             Task.Delay(500).ContinueWith((_) =>
             {
+                var token = userService.Login(new Credentials()
+                {
+                    Username = "APP SERVICE",
+                    Password = "idkfa"
+
+                }).Result;
+
                 _tradeEventService = SignalRServiceBuilder<TradeEvent, TradeEventRequest>
                                   .Create()
-                                  .Build(new TradeEventRequest((p) => true));
+                                  .Build(new TradeEventRequest((p) => true), (opts) =>
+                                  {
+                                      opts.AccessTokenProvider = () => Task.FromResult(token.Digest);
+                                  });
 
                 _tradeEventService.Connect(Scheduler.Default, 0);
             });

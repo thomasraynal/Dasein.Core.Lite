@@ -1,5 +1,7 @@
 ﻿using Dasein.Core.Lite.Demo.Shared;
 using Dasein.Core.Lite.Shared;
+using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -13,7 +15,11 @@ namespace Dasein.Core.Lite.Demo.Server
     {
         private Func<HubConnectionBuilder> _builder;
 
-        public TradeEventHubClient(TradeEventRequest request) : base(request)
+        public TradeEventHubClient(TradeEventRequest request, HttpTransportType transports, Action<HttpConnectionOptions> configureHttpConnection) : base(request, transports, configureHttpConnection)
+        {
+        }
+
+        protected override void Initialize()
         {
             _builder = () =>
             {
@@ -22,7 +28,6 @@ namespace Dasein.Core.Lite.Demo.Server
                     options.PayloadSerializerSettings = AppCore.Instance.Get<JsonSerializerSettings>();
                 });
             };
-
         }
 
         public override string HubName => TradeServiceReferential.TradeEventHub;

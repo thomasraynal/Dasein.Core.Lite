@@ -14,9 +14,8 @@ namespace Dasein.Core.Lite.Demo.Server
     {
         private readonly List<ITrade> _repository;
         private ISignalRService<TradeEvent, TradeEventRequest> _tradeEventService;
-        private ISignalRService<Price, PriceRequest> _priceEventService;
 
-        public TradeService()
+        public TradeService(IUserService userService)
         {
             _repository = new List<ITrade>();
 
@@ -26,9 +25,19 @@ namespace Dasein.Core.Lite.Demo.Server
                 _repository.Add(trade);
             }
 
+            var token = userService.Login(new Credentials()
+            {
+                Username = "APP SERVICE",
+                Password = "idkfa"
+
+            }).Result;
+
             _tradeEventService = SignalRServiceBuilder<TradeEvent, TradeEventRequest>
                                 .Create()
-                                .Build(new TradeEventRequest((p) => true));
+                                .Build(new TradeEventRequest((p) => true), (opts) =>
+                                {
+                                    opts.AccessTokenProvider = () => Task.FromResult(token.Digest);
+                                });
 
             _tradeEventService.Connect(Scheduler.Default, 1000)
                                .Subscribe((tradeEvent) =>
@@ -37,11 +46,6 @@ namespace Dasein.Core.Lite.Demo.Server
                                    if (null == trade) return;
                                    trade.Status = tradeEvent.Status;
                                });
-
-            _priceEventService = SignalRServiceBuilder<Price, PriceRequest>
-                                            .Create()
-                                            .Build(new PriceRequest((p) => true));
-
 
         }
 

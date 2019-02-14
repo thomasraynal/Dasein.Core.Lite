@@ -343,7 +343,10 @@ namespace Dasein.Core.Lite.Tests
 
             var service = SignalRServiceBuilder<Price, PriceRequest>
                             .Create()
-                            .Build(query);
+                            .Build(query, (opts) =>
+                            {
+                                opts.AccessTokenProvider = () => Task.FromResult(_traderToken.Digest);
+                            });
 
             var disposable = service.Connect(Scheduler.Default, 0)
                     .Subscribe(p =>

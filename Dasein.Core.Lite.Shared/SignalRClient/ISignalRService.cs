@@ -16,6 +16,6 @@ namespace Dasein.Core.Lite.Shared
         TRequest Request { get; }
         IObservable<TDto> Connect(IScheduler scheduler, long connectionTimeoutDelay);
         void Disconnect();
-        void Initialize();
+        void BuildInternal();
     }
 }
