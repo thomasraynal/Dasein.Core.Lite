@@ -12,11 +12,6 @@ namespace Dasein.Core.Lite.Demo.Server
         {
         }
 
-        public async Task RaisePriceChanged(Price price)
-        {
-            await RaiseChange(price, TradeServiceReferential.OnPriceChanged);
-        }
-
         public override string Name => nameof(PriceHub);
     }
 }

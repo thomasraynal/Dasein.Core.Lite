@@ -26,8 +26,6 @@ namespace Dasein.Core.Lite.Demo.Shared
         public const string TraderClaimValue = "Trader";
         public const string EquityTraderClaimValue = "EQ-Trader";
         public const string OnPriceChanged = "OnPriceChanged";
-        public const string RaisePriceChanged = "RaisePriceChanged";
-        public const string RaiseTradeEvent = "RaiseTradeEvent";
         public const string OnTradeEvent = "OnTradeEvent";
         public const string PriceHub = "PriceHub";
         public const string TradeEventHub = "TradeEventHub";

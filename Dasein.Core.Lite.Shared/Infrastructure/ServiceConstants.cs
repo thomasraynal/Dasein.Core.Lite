@@ -4,6 +4,12 @@ using System.Text;
 
 namespace Dasein.Core.Lite
 {
+    public static class SignalRConstants
+    {
+        public static string OnUpdate = "OnChange";
+        public static string RaiseChange = "RaiseChange";
+    }
+
     public static class ServiceConstants
     {
         public static string serviceConfiguration = "serviceConfiguration";

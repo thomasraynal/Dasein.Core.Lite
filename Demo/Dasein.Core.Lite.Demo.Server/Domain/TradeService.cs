@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Dasein.Core.Lite.Demo.Server
 {
@@ -31,6 +32,7 @@ namespace Dasein.Core.Lite.Demo.Server
                 Password = "idkfa"
 
             }).Result;
+
 
             _tradeEventService = SignalRServiceBuilder<TradeEvent, TradeEventRequest>
                                 .Create()

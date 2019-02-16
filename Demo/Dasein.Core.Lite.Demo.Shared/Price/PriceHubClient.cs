@@ -29,7 +29,6 @@ namespace Dasein.Core.Lite.Demo.Shared
 
         public override string HubName => TradeServiceReferential.PriceHub;
 
-        public override string OnStreamUpdateMethodName => TradeServiceReferential.OnPriceChanged;
 
         public override Func<HubConnectionBuilder> ConnectionBuilderProvider => _builder;
     }

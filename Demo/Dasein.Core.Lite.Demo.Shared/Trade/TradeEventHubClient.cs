@@ -32,8 +32,6 @@ namespace Dasein.Core.Lite.Demo.Server
 
         public override string HubName => TradeServiceReferential.TradeEventHub;
 
-        public override string OnStreamUpdateMethodName => TradeServiceReferential.OnTradeEvent;
-
         public override Func<HubConnectionBuilder> ConnectionBuilderProvider => _builder;
     }
 }

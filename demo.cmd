@@ -4,9 +4,8 @@ dotnet publish --configuration Debug ./Demo/Dasein.Core.Lite.Demo.Host
 
 call %msBuildLocation% ./Demo/Dasein.Core.Lite.Demo.Desktop/Dasein.Core.Lite.Demo.Desktop.csproj
 
-pause
-
 start /d "." dotnet run --no-build --project ./Demo/Dasein.Core.Lite.Demo.Host
+
 timeout 7
 
 start  ./Demo/Dasein.Core.Lite.Demo.Desktop/bin/Debug/Dasein.Service.Demo.Desktop.exe

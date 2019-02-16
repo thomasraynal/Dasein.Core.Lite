@@ -362,9 +362,9 @@ namespace Dasein.Core.Lite.Tests
                 await Task.Delay(500);
             }
 
-            await service.Current.Proxy.InvokeAsync(TradeServiceReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock1", 20000, DateTime.Now));
-            await service.Current.Proxy.InvokeAsync(TradeServiceReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock2", 30000, DateTime.Now));
-            await service.Current.Proxy.InvokeAsync(TradeServiceReferential.RaisePriceChanged, new Price(Guid.NewGuid(), "stock3", 60000, DateTime.Now));
+            await service.Current.Proxy.RaiseChange(new Price(Guid.NewGuid(), "stock1", 20000, DateTime.Now));
+            await service.Current.Proxy.RaiseChange(new Price(Guid.NewGuid(), "stock2", 30000, DateTime.Now));
+            await service.Current.Proxy.RaiseChange(new Price(Guid.NewGuid(), "stock3", 60000, DateTime.Now));
 
 
             await Task.Delay(500);

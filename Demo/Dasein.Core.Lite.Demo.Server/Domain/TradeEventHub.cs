@@ -16,10 +16,5 @@ namespace Dasein.Core.Lite.Demo.Server
         }
 
         public override string Name => nameof(TradeEventHub);
-
-        public async Task RaiseTradeEvent(TradeEvent @event)
-        {
-            await RaiseChange(@event, TradeServiceReferential.OnTradeEvent);
-        }
     }
 }

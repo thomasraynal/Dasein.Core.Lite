@@ -15,19 +15,20 @@ namespace Dasein.Core.Lite
     public abstract class HubBase<TDto> : Hub, ICanLog, IDisposable
     {
         private readonly IHubContextHolder<TDto> _context;
-        
+
         public abstract String Name { get; }
+
 
         public HubBase(IHubContextHolder<TDto> context)
         {
             _context = context;
         }
 
-        public Task RaiseChange(TDto change, String method)
+        public Task RaiseChange(TDto change)
         {
             foreach (var connection in _context.Groups)
             {
-                if (connection.Value(change)) this.Clients.Client(connection.Key).SendAsync(method, change);
+                if (connection.Value(change)) this.Clients.Client(connection.Key).SendAsync(SignalRConstants.OnUpdate, change);
             }
 
             return Task.CompletedTask;

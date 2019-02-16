@@ -53,7 +53,7 @@ namespace Dasein.Core.Lite.Demo.Server
                 //if signalr is still trying to get a running instance, just bypass the process... 
                 if (null == _tradeEventService.Current) return;
 
-                await _tradeEventService.Current.Proxy.InvokeAsync(TradeServiceReferential.RaiseTradeEvent, new TradeEvent()
+                await _tradeEventService.Current.Proxy.RaiseChange(new TradeEvent()
                 {
                     Status = TradeStatus.ComplianceCheck,
                     TradeId = trade.TradeId
@@ -76,7 +76,7 @@ namespace Dasein.Core.Lite.Demo.Server
                     status = TradeStatus.Rejected;
                 }
 
-                await _tradeEventService.Current.Proxy.InvokeAsync(TradeServiceReferential.RaiseTradeEvent, new TradeEvent()
+                await _tradeEventService.Current.Proxy.RaiseChange(new TradeEvent()
                 {
                     Status = status,
                     TradeId = trade.TradeId

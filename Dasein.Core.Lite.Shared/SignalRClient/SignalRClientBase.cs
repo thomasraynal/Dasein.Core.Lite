@@ -26,7 +26,7 @@ namespace Dasein.Core.Lite.Shared
         private Action _onSuccess;
 
         public abstract String HubName { get; }
-        public abstract String OnStreamUpdateMethodName { get; }
+        public string OnStreamUpdateMethodName => SignalRConstants.OnUpdate;
         public TRequest Request { get; }
         public Action<HttpConnectionOptions> HttpConnectionOptions { get; }
         public HttpTransportType TransportType { get; }

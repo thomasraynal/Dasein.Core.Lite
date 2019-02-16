@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -20,14 +21,22 @@ namespace Dasein.Core.Lite.Demo.Server
         private IServiceConfiguration _configuration;
         private CompositeDisposable _dispose;
 
-        public PricePublisher(IHubContext<PriceHub> priceHub, IPriceService priceService, IServiceConfiguration configuration)
+        public PricePublisher(IHubContext<PriceHub> priceHub, IUserService userService, IPriceService priceService, IServiceConfiguration configuration)
         {
             _rand = new Random();
 
             _priceHub = priceHub;
             _priceService = priceService;
             _configuration = configuration;
-        
+
+
+            var token = userService.Login(new Credentials()
+            {
+                Username = "APP SERVICE",
+                Password = "idkfa"
+
+            }).Result;
+
             _dispose = new CompositeDisposable();
         }
 
@@ -47,7 +56,7 @@ namespace Dasein.Core.Lite.Demo.Server
                   await _priceService.CreatePrice(price);
 
                   _priceHistory.Add(price);
-                  await _priceHub.Clients.All.SendAsync(TradeServiceReferential.OnPriceChanged, price);
+                  await _priceHub.RaiseChange(price);
 
               });
 
