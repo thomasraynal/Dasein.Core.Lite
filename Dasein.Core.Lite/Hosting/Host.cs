@@ -23,7 +23,7 @@ namespace Dasein.Core.Lite
         public IWebHost Build(params string[] args)
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile(serviceConfigFile, false, true)
+                .AddJsonFile(serviceConfigFile, true, true)
                 .AddCommandLine(args)
                 .AddEnvironmentVariables();
 
