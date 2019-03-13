@@ -2,7 +2,7 @@
 using Dasein.Core.Lite;
 using Dasein.Core.Lite.Shared;
 using FluentValidation.AspNetCore;
-using GraphQL;
+//using GraphQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -53,7 +53,7 @@ namespace Dasein.Core.Lite.Demo.Server
             services.AddSingleton<ICacheStrategy<MethodCacheObject>, DefaultCacheStrategy<MethodCacheObject>>();
             services.AddSingleton<ICacheStrategy<ResponseCacheEntry>, DefaultCacheStrategy<ResponseCacheEntry>>();
             services.AddTransient<IAuthorizationHandler, ClaimRequirementHandler>();
-            services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
+            //services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IMemoryCache, ResponseMemoryCache>();
 
             services.AddSwagger(ServiceConfiguration);

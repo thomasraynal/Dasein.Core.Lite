@@ -177,67 +177,67 @@ namespace Dasein.Core.Lite.Tests
             }
         }
 
-        [Test]
-        public async Task ShouldTestGraphQL()
-        {
-            var options = new GraphQLClientOptions()
-            {
-                JsonSerializerSettings = AppCore.Instance.Get<JsonSerializerSettings>(),
-                HttpMessageHandler = new TestHttpHandler()
-                {
-                    InnerHandler = new HttpClientHandler()
-        }
+     //   [Test]
+     //   public async Task ShouldTestGraphQL()
+     //   {
+     //       var options = new GraphQLClientOptions()
+     //       {
+     //           JsonSerializerSettings = AppCore.Instance.Get<JsonSerializerSettings>(),
+     //           HttpMessageHandler = new TestHttpHandler()
+     //           {
+     //               InnerHandler = new HttpClientHandler()
+     //   }
 
-            };
+     //       };
 
-            var graphQLClient = new GraphQLClient("http://localhost:8080/api/v1/graphql/trades", options);
+     //       var graphQLClient = new GraphQLClient("http://localhost:8080/api/v1/graphql/trades", options);
 
-            var query = new GraphQLRequest()
-            {
-                Query = "{trades {id,date,counterparty}}",
-                OperationName = "trades"
-            };
+     //       var query = new GraphQLRequest()
+     //       {
+     //           Query = "{trades {id,date,counterparty}}",
+     //           OperationName = "trades"
+     //       };
 
-            var faultyQuery = new GraphQLRequest()
-            {
-                Query = "{trades {nothing}}",
-                OperationName = "trades"
-            };
+     //       var faultyQuery = new GraphQLRequest()
+     //       {
+     //           Query = "{trades {nothing}}",
+     //           OperationName = "trades"
+     //       };
 
-            var queryResult = await graphQLClient.PostAsync(query);
-            var results = queryResult.GetDataFieldAs<List<TradeDto>>("trades");
+     //       var queryResult = await graphQLClient.PostAsync(query);
+     //       var results = queryResult.GetDataFieldAs<List<TradeDto>>("trades");
 
-            Assert.IsTrue(results.Count > 0);
+     //       Assert.IsTrue(results.Count > 0);
 
-            var trades = await _tradeClient.GetAllTrades();
+     //       var trades = await _tradeClient.GetAllTrades();
 
-            var tradeAndPricesQuery = new GraphQLRequest()
-            {
-                Query = @"query FetchTradeAndPrices($tradeId: String) {
-                 	prices(tradeId:$tradeId) 
-                    {
-						value,
-						date
-					}
-                }",
-                OperationName = "FetchTradeAndPrices",
-                Variables = new
-                {
-                    tradeId = trades.First().Id
-                }
-            };
+     //       var tradeAndPricesQuery = new GraphQLRequest()
+     //       {
+     //           Query = @"query FetchTradeAndPrices($tradeId: String) {
+     //            	prices(tradeId:$tradeId) 
+     //               {
+					//	value,
+					//	date
+					//}
+     //           }",
+     //           OperationName = "FetchTradeAndPrices",
+     //           Variables = new
+     //           {
+     //               tradeId = trades.First().Id
+     //           }
+     //       };
 
 
-            queryResult = await graphQLClient.PostAsync(tradeAndPricesQuery);
+     //       queryResult = await graphQLClient.PostAsync(tradeAndPricesQuery);
 
-            Assert.IsNotNull(queryResult.Data.prices);
+     //       Assert.IsNotNull(queryResult.Data.prices);
 
-            Assert.CatchAsync(async () =>
-            {
-                var resultss = await graphQLClient.PostAsync(faultyQuery);
-            });
+     //       Assert.CatchAsync(async () =>
+     //       {
+     //           var resultss = await graphQLClient.PostAsync(faultyQuery);
+     //       });
 
-        }
+     //   }
 
         [Test]
         public async Task ShouldValidateServiceRequest()

@@ -1,56 +1,56 @@
-﻿using Dasein.Core.Lite.Shared;
-using GraphQL;
-using GraphQL.Types;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using Dasein.Core.Lite.Shared;
+//using GraphQL;
+//using GraphQL.Types;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace Dasein.Core.Lite
-{
-    [Route("api/v{version:apiVersion}/graphql/[controller]")]
-    public abstract class GraphQLControllerBase<TSchema> : Controller, ICanLog
-        where TSchema : ISchema , new()
-    {
-        private ISchema _schema;
-        private IDocumentExecuter _documentExecuter;
+//namespace Dasein.Core.Lite
+//{
+//    [Route("api/v{version:apiVersion}/graphql/[controller]")]
+//    public abstract class GraphQLControllerBase<TSchema> : Controller, ICanLog
+//        where TSchema : ISchema , new()
+//    {
+//        private ISchema _schema;
+//        private IDocumentExecuter _documentExecuter;
 
-        public GraphQLControllerBase(IDocumentExecuter documentExecuter)
-        {
-            _schema = new TSchema();
-            _documentExecuter = documentExecuter;
-        }
+//        public GraphQLControllerBase(IDocumentExecuter documentExecuter)
+//        {
+//            _schema = new TSchema();
+//            _documentExecuter = documentExecuter;
+//        }
 
-        [Authorize]
-        [HttpPost]
-        public virtual async Task<IActionResult> Post([FromBody] GraphQLQuery query)
-        {
-            return await PostInternal(query);
-        }
+//        [Authorize]
+//        [HttpPost]
+//        public virtual async Task<IActionResult> Post([FromBody] GraphQLQuery query)
+//        {
+//            return await PostInternal(query);
+//        }
 
-        protected async Task<IActionResult> PostInternal(GraphQLQuery query)
-        {
-            if (null == query) throw new InvalidGraphQLRequestException("GraphQLQuery cannot be resolved");
+//        protected async Task<IActionResult> PostInternal(GraphQLQuery query)
+//        {
+//            if (null == query) throw new InvalidGraphQLRequestException("GraphQLQuery cannot be resolved");
 
-            var inputs = query.Variables.ToInputs();
+//            var inputs = query.Variables.ToInputs();
 
-            var executionOptions = new ExecutionOptions
-            {
-                Schema = _schema,
-                Query = query.Query,
-                Inputs = inputs
-            };
+//            var executionOptions = new ExecutionOptions
+//            {
+//                Schema = _schema,
+//                Query = query.Query,
+//                Inputs = inputs
+//            };
 
-            var result = await _documentExecuter.ExecuteAsync(executionOptions);
+//            var result = await _documentExecuter.ExecuteAsync(executionOptions);
 
-            if (result.Errors?.Count > 0)
-            {
-                throw new InvalidGraphQLRequestException(result.Errors);
-            }
+//            if (result.Errors?.Count > 0)
+//            {
+//                throw new InvalidGraphQLRequestException(result.Errors);
+//            }
 
-            return Ok(result);
-        }
-    }
-}
+//            return Ok(result);
+//        }
+//    }
+//}
