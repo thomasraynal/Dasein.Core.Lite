@@ -51,7 +51,7 @@ namespace Dasein.Core.Lite.Shared
 
                 refitSettings = new RefitSettings()
                 {
-                    JsonSerializerSettings = settings
+                    ContentSerializer = new JsonContentSerializer(settings)
                 };
             }
             

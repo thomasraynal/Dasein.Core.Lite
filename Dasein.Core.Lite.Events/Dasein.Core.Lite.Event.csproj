@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DynamicData" Version="6.7.0.2529" />
+    <PackageReference Include="DynamicData" Version="6.8.0.2561" />
     <PackageReference Include="Orc.DependencyGraph" Version="3.1.0" />
   </ItemGroup>
 

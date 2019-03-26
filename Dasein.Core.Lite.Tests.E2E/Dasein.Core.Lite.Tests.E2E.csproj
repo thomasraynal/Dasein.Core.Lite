@@ -9,12 +9,13 @@
 
   <ItemGroup>
     <PackageReference Include="GraphQL.Client" Version="1.0.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="NUnit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.11.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dasein.Core.Lite.Events\Dasein.Core.Lite.Event.csproj" />
     <ProjectReference Include="..\Dasein.Core.Lite\Dasein.Core.Lite.csproj" />
     <ProjectReference Include="..\Demo\Dasein.Core.Lite.Demo.Server\Dasein.Core.Lite.Demo.Server.csproj" />
   </ItemGroup>
